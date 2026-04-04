@@ -72,6 +72,9 @@ known-first-party = ["config", "core", "api", "extractors", "loaders", "pipeline
 # --- Build system ---
 # Tells pip how to install this project.
 
+[tool.setuptools.packages.find]
+where = ["backend"]
+
 [build-system]
 requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
