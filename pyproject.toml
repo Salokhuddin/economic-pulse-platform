@@ -1,0 +1,77 @@
+# --- Project metadata ---
+# This identifies your project to Python's packaging system.
+[project]
+name = "economic-pulse-platform"
+version = "0.1.0"
+description = "Real-time economic intelligence platform"
+requires-python = ">=3.10"
+
+# --- Runtime dependencies ---
+# These are packages your application NEEDS to run.
+# pip reads this list and installs them all.
+# The version constraints (e.g., >=5.1,<6.0) mean:
+#   "at least version 5.1, but not version 6.0 or above"
+# This protects you from breaking changes in major version upgrades.
+dependencies = [
+    "django>=5.1,<6.0",
+    "djangorestframework>=3.15,<4.0",
+    "django-cors-headers>=4.4,<5.0",
+    "django-environ>=0.11,<1.0",
+    "psycopg2-binary>=2.9,<3.0",
+    "requests>=2.32,<3.0",
+]
+
+# --- Dev dependencies ---
+# These are ONLY needed during development, not in production.
+# Installed when you run: pip install -e ".[dev]"
+# The [dev] part is called an "optional dependency group".
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0,<9.0",
+    "pytest-django>=4.8,<5.0",
+    "pytest-cov>=5.0,<6.0",
+    "ruff>=0.6,<1.0",
+    "pre-commit>=3.8,<4.0",
+]
+
+# --- Pytest configuration ---
+# Instead of a separate pytest.ini file, we configure pytest here.
+[tool.pytest.ini_options]
+# Tells pytest-django which settings file to use for tests
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+# Pattern matching: which files/classes/functions are tests
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+# Where to look for tests
+testpaths = ["backend"]
+# Output format: short tracebacks, quiet mode
+addopts = "--tb=short -q"
+
+# --- Ruff configuration ---
+# Ruff is a Python linter and formatter (like ESLint for JavaScript).
+# It catches bugs, enforces consistent style, and auto-sorts imports.
+[tool.ruff]
+target-version = "py310"
+src = ["backend"]
+line-length = 99
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors (style violations)
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes (logic errors like unused imports)
+    "I",    # isort (keeps imports sorted consistently)
+    "B",    # flake8-bugbear (catches common bugs)
+    "UP",   # pyupgrade (suggests modern Python syntax)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "core", "api", "extractors", "loaders", "pipelines"]
+
+# --- Build system ---
+# Tells pip how to install this project.
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"

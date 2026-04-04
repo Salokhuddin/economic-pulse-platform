@@ -1,0 +1,39 @@
+# Python bytecode — generated when Python runs your code
+# Different on every machine, never commit these
+__pycache__/
+*.py[cod]
+
+# Virtual environment — hundreds of MBs of installed packages
+# Every developer creates their own from pyproject.toml
+venv/
+
+# Environment variables file — contains secrets (API keys, passwords)
+# .env.example is committed (as a template), .env is NOT
+.env
+
+# IDE settings — personal to each developer
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+
+# Docker volumes — database data stored on your machine
+docker/postgres_data/
+
+# Test/coverage artifacts
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Python packaging
+*.egg-info/
+dist/
+build/
+
+# Django
+*.sqlite3
+
+# Node (for the React frontend in later sprints)
+node_modules/
+web/dist/

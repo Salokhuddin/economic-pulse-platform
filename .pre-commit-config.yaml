@@ -1,0 +1,26 @@
+# Pre-commit hooks run automatically before every git commit.
+# If any hook fails, the commit is blocked until you fix the issue.
+
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      # Linter — catches bugs and enforces style rules
+      - id: ruff
+        args: [--fix]
+      # Formatter — auto-formats code (like Black, but faster)
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      # Prevent committing large files accidentally
+      - id: check-added-large-files
+      # Ensure files end with a newline
+      - id: end-of-file-fixer
+      # Remove trailing whitespace
+      - id: trailing-whitespace
+      # Catch merge conflict markers left in files
+      - id: check-merge-conflict
+      # Validate YAML files (catches docker-compose.yml typos)
+      - id: check-yaml

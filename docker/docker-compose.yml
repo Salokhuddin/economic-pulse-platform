@@ -1,0 +1,54 @@
+# Docker Compose defines the infrastructure services our app depends on.
+# Start everything:   docker compose -f docker/docker-compose.yml up -d
+# Stop everything:    docker compose -f docker/docker-compose.yml down
+# See running status: docker compose -f docker/docker-compose.yml ps
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — our data warehouse
+  # ---------------------------------------------------------------------------
+  db:
+    # The Docker image to use. "postgres:16-alpine" means:
+    #   postgres  = official PostgreSQL image from Docker Hub
+    #   16        = version 16 (matches our tech stack)
+    #   alpine    = tiny Linux base image (~80MB vs ~400MB for full)
+    image: postgres:16-alpine
+
+    # Give the container a predictable name (instead of a random one)
+    container_name: epp_postgres
+
+    # Restart automatically if it crashes (but not if you manually stop it)
+    restart: unless-stopped
+
+    # Map port 5432 inside the container to port 5432 on your machine.
+    # This is how Django (running on your machine) talks to PostgreSQL
+    # (running inside Docker). Format: "HOST_PORT:CONTAINER_PORT"
+    ports:
+      - "5434:5432"
+
+    # Environment variables that PostgreSQL reads on startup to create
+    # the default database, user, and password.
+    # ${VAR:-default} means "use $VAR if set, otherwise use 'default'"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-epp_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-epp_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-epp_secret}
+
+    # Persist data between container restarts. Without this, stopping
+    # the container would delete all your data.
+    # "postgres_data" is a named volume — Docker manages where it's
+    # actually stored on disk.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    # Docker will periodically check if PostgreSQL is ready to accept
+    # connections. Other services can depend on this.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-epp_user}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+# Declare the named volume so Docker manages it
+volumes:
+  postgres_data:
