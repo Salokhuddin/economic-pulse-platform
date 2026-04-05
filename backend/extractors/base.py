@@ -14,12 +14,12 @@ class BaseExtractor(ABC):
         self.access_key = access_key
 
     @abstractmethod
-    def extract(self, series: str) -> dict:
+    def extract(self, series_id: str) -> dict:
         """Receives data series to extract and returns fetched data in dict format"""
         pass
 
     @abstractmethod
-    def validate(self, raw_data):
+    def validate(self, extracted_data):
         """Receives extracted data and validates it against the desired format."""
         pass
 
